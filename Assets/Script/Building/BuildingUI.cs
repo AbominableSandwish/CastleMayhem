@@ -1,5 +1,3 @@
-using Unity.Hierarchy;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 
 

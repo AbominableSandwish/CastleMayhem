@@ -1,3 +1,4 @@
+using System.Drawing;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -13,6 +14,7 @@ public class MapManager : MonoBehaviour
 
     bool isSetting = false;
     Cell[,] map;
+    const int height = 20;
 
     [SerializeField] GameObject prefabTile;
     [SerializeField] Tilemap tilemap;
@@ -31,11 +33,11 @@ public class MapManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        map = new Cell[20,20];
+        map = new Cell[height, height];
 
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < height; i++)
         {
-            for (int j = 0; j < 20; j++)
+            for (int j = 0; j < height; j++)
             {
                 
                 float rdm = Random.value;
@@ -62,9 +64,11 @@ public class MapManager : MonoBehaviour
     {
         if (isSetting)
         {
-            Vector2 mousePos = new Vector2(Input.mousePosition.x - Screen.mainWindowPosition.x, Input.mousePosition.y - Screen.mainWindowPosition.y) - offsetMouse;
-            Vector3Int cellPos = new Vector3Int((int)(mousePos.y / heightCell) / 2 + (int)(mousePos.x / widthCell) / 2 + 9, (int)(mousePos.y / heightCell) / 2 - (int)(mousePos.x / widthCell) / 2 + 9);
-            Debug.Log(cellPos);
+            Vector2 mousePos = GameObject.Find("Cursor").GetComponent<CursorView>().GetPosition() * 2f;
+        
+            Point pos = new Point();
+            pos.X = ((int)mousePos.x - 1) / 2 + ((int)mousePos.y - 1) * 1 + height / 2;
+            pos.Y = ((int)mousePos.y - 1) * 1 + ((int)mousePos.x - 1) / (-2) + height / 2;
 
             Refresh();
 
@@ -72,21 +76,21 @@ public class MapManager : MonoBehaviour
             {
                 for (int j = 0; j < _cursor.y; j++)
                 {
-                    if (cellPos.x + i >= 0 && cellPos.x + i < 20
-                     && cellPos.y + j >= 0 && cellPos.y + j < 20)
+                    if (pos.X + i >= 0 && pos.X + i < height
+                     && pos.Y + j >= 0 && pos.Y + j < height)
                     {
                         Tile tile = new Tile();
-                        if (map[cellPos.x + i, cellPos.y + j].IsBuildable)
+                        if (map[pos.X + i, pos.Y + j].IsBuildable)
                         {
                             //Dirt
                             tile.sprite = sprites[0];
                         }
-                        if (!map[cellPos.x + i, cellPos.y + j].IsBuildable)
+                        if (!map[pos.X + i, pos.Y + j].IsBuildable)
                         {
                             //Rock
                             tile.sprite = sprites[1];
                         }
-                        tilemap.SetTile(new Vector3Int(cellPos.x + i, cellPos.y + j, 0), tile);
+                        tilemap.SetTile(new Vector3Int(pos.X + i, pos.Y + j, 0), tile);
                     }
                 }
             }
