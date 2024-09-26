@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using UnityEngine;
@@ -13,12 +14,15 @@ public class MapManager : MonoBehaviour
     [DllImport("user32.dll")] public static extern bool SetCursorPos(int X, int Y);
 
     bool isSetting = false;
+    bool isConfirm = false;
     Cell[,] map;
     const int height = 20;
 
     [SerializeField] GameObject prefabTile;
     [SerializeField] Tilemap tilemap;
     [SerializeField] Sprite[] sprites;
+
+    InputSystem input;
 
     int widthCell;
     int heightCell;
@@ -39,8 +43,8 @@ public class MapManager : MonoBehaviour
         {
             for (int j = 0; j < height; j++)
             {
-                
-                float rdm = Random.value;
+
+                float rdm = UnityEngine.Random.value;
                 if (rdm <= 0.75f)
                 {
                     //Dirt
@@ -57,6 +61,7 @@ public class MapManager : MonoBehaviour
     private void Start()
     {
         Refresh();
+        input = GetComponent<InputSystem>();
     }
 
     // Update is called once per frame
@@ -64,49 +69,57 @@ public class MapManager : MonoBehaviour
     {
         if (isSetting)
         {
-            Vector2 mousePos = GameObject.Find("Cursor").GetComponent<CursorView>().GetPosition() * 2f;
-        
-            Point pos = new Point();
-            pos.X = ((int)mousePos.x - 1) / 2 + ((int)mousePos.y - 1) * 1 + height / 2;
-            pos.Y = ((int)mousePos.y - 1) * 1 + ((int)mousePos.x - 1) / (-2) + height / 2;
-
-            Refresh();
-
-            for (int i = 0; i < _cursor.x; i++)
+            if (!isConfirm)
             {
-                for (int j = 0; j < _cursor.y; j++)
+                Vector2 mousePos = GameObject.Find("Cursor").GetComponent<CursorView>().GetPosition() * 2f;
+
+                Point pos = new Point();
+                pos.X = ((int)mousePos.x - 1) / 2 + ((int)mousePos.y - 1) * 1 + height / 2;
+                pos.Y = ((int)mousePos.y - 1) * 1 + ((int)mousePos.x - 1) / (-2) + height / 2;
+
+                Refresh();
+
+                for (int i = 0; i < _cursor.x; i++)
                 {
-                    if (pos.X + i >= 0 && pos.X + i < height
-                     && pos.Y + j >= 0 && pos.Y + j < height)
+                    for (int j = 0; j < _cursor.y; j++)
                     {
-                        Tile tile = new Tile();
-                        if (map[pos.X + i, pos.Y + j].IsBuildable)
+                        if (pos.X + i >= 0 && pos.X + i < height
+                         && pos.Y + j >= 0 && pos.Y + j < height)
                         {
-                            //Dirt
-                            tile.sprite = sprites[0];
+                            Tile tile = new Tile();
+                            if (map[pos.X + i, pos.Y + j].IsBuildable)
+                            {
+                                //Dirt
+                                tile.sprite = sprites[0];
+                            }
+                            if (!map[pos.X + i, pos.Y + j].IsBuildable)
+                            {
+                                //Rock
+                                tile.sprite = sprites[1];
+                            }
+                            tilemap.SetTile(new Vector3Int(pos.X + i, pos.Y + j, 0), tile);
                         }
-                        if (!map[pos.X + i, pos.Y + j].IsBuildable)
-                        {
-                            //Rock
-                            tile.sprite = sprites[1];
-                        }
-                        tilemap.SetTile(new Vector3Int(pos.X + i, pos.Y + j, 0), tile);
                     }
                 }
             }
 
-            if (Input.GetButton("Fire1"))
+            if (input.ActionFree(InputSystem.Action.Confim))
             {
-                //Show Panel
-                RectTransform rect = GameObject.Find("PanelChoice").GetComponent<RectTransform>();
-
-                Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(Camera.main, transform.position);
-
-                rect.anchoredPosition = screenPoint - GameObject.FindFirstObjectByType<Canvas>().GetComponent<RectTransform>().sizeDelta / 2f + new Vector2(0, 24);
+                if (!isConfirm)
+                {
+                    isConfirm = true;
+                    //Show Panel
+                    RectTransform rect = GameObject.Find("PanelChoice").GetComponent<RectTransform>();
+                    rect.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z) - new Vector3(0, 1, 0));
+                }
             }
 
-            if (Input.GetKey(KeyCode.Escape))
+
+            if (input.ActionFree(InputSystem.Action.Cancel))
             {
+                isConfirm = false;
+                RectTransform rect = GameObject.Find("PanelChoice").GetComponent<RectTransform>();
+                rect.position = Camera.main.ScreenToWorldPoint(new Vector3(0, -350, 0));
                 CancelBuilding();
             }
 
@@ -135,7 +148,7 @@ public class MapManager : MonoBehaviour
     }
 
 
-    public void NewBuilding()
+    public void NewBuilding(int type)
     {
 
         widthCell = (int)(64.0f / Screen.currentResolution.width * Screen.width);
@@ -143,9 +156,6 @@ public class MapManager : MonoBehaviour
 
         SetCursorPos(Screen.mainWindowPosition.x + Screen.width / 2, Screen.mainWindowPosition.y + Screen.height / 2);
         offsetMouse = (Vector2)Input.mousePosition - Screen.mainWindowPosition;
-        //UnityEngine.Cursor.visible = false;
-        // Confines the cursor
-        UnityEngine.Cursor.lockState = CursorLockMode.Confined;
         Debug.Log(Input.mousePositionDelta);
 
         isSetting = true;
@@ -159,6 +169,17 @@ public class MapManager : MonoBehaviour
                 tilemap.SetTile(new Vector3Int(i, j, 0), tile);
             }
         }
+
+        GameObject.Find("PanelBuilding").GetComponent<MenuBuilding>().CloseMenu();
+        input.ActionFree(InputSystem.Action.Confim);
+        int id = -1;
+        switch ((Building.Type)type)
+        {
+            case Building.Type.factory: id = 0; break;
+            case Building.Type.miningCamp: id = 3; break;
+            default: id = -1; break;
+        }
+        GetComponent<BuildingSystem>().Preview(id);
     }
 
     void Refresh()
@@ -189,5 +210,9 @@ public class MapManager : MonoBehaviour
         Refresh();
         SetX(0);
         SetY(0);
+
+
+        GameObject.Find("PanelBuilding").GetComponent<MenuBuilding>().OpenMenu();
+        GetComponent<BuildingSystem>().CancelPreview();
     }
 }

@@ -15,14 +15,18 @@ public class Building
     const int COSTMATERIAL2 = 0;
     int level = 0;
     public bool CanComplete = false;
+    public string pathSprite;
+    public int idSprite = -1;
 
     public GameObject obj;
     public GameObject button;
 
-    public Building(Type type, GameObject obj)
+    public Building(Type type, GameObject obj, string path, int idSprite)
     {
         this.type = type;
         this.obj = obj;
+        this.pathSprite = path;
+        this.idSprite = idSprite;
     }
 
     public virtual void Start()
@@ -44,7 +48,7 @@ public class BuildingZone : Building
 {
     float timeToBuild;
 
-    public BuildingZone(Type type, GameObject zone, float timeToBuild) : base(type, zone)
+    public BuildingZone(Type type, GameObject zone, float timeToBuild) : base(type, zone, "", 0)
     {
 
     }
@@ -79,7 +83,7 @@ public class Factory : Building
 
     int resource = 0;
 
-    public Factory(GameObject zone) : base(Type.factory, zone)
+    public Factory(GameObject zone) : base(Type.factory, zone, "Sprites/BuildingSprite" , 0)
     {
 
     }
@@ -129,7 +133,7 @@ public class MiningCamp : Building
 
     int resource = 0;
 
-    public MiningCamp(GameObject zone) : base(Type.miningCamp, zone)
+    public MiningCamp(GameObject zone) : base(Type.miningCamp, zone, "Sprites/BuildingSprite", 3)
     {
 
     }

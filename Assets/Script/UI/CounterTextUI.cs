@@ -21,7 +21,8 @@ namespace UI
         private void Awake()
         {
             _textScore.text = "0";
-            _animator = _textScore.GetComponent<Animator>();
+            
+            _animator = _textScore.GetComponentInParent<Animator>();
 
 
             _ressource = FindAnyObjectByType<RessourceSystem>();
