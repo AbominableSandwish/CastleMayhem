@@ -5,9 +5,12 @@ namespace UI
 {
     public class CounterTextUI : MonoBehaviour
     {
+
+
         [SerializeField] RessourceSystem.Type _type;
         private const float TIME_TO_START = 1f;
         private static readonly int IsGain = Animator.StringToHash("isGain");
+        private static readonly int IsSpend = Animator.StringToHash("isSpend");
 
         [SerializeField] private TextMeshProUGUI _textScore;
         [SerializeField] private int _speed = 4;
@@ -54,21 +57,41 @@ namespace UI
             _counterTime += Time.deltaTime;
             if (!(_counterTime > TIME_TO_START)) return;
 
-
-            if (_current >= _score)
+            switch (_ressource.lastAction)
             {
-                _animator.SetBool(IsGain, false);
-                return;
+                case RessourceSystem.Action.Add:
+                    if (_current >= _score)
+                    {
+                        _animator.SetBool(IsGain, false);
+                        return;
+                    }
+
+                    _animator.SetBool(IsGain, true);
+                    _current += _speed;
+                    if (_current > _score)
+                    {
+                        _current = _score;
+                    }
+                    break;
+
+                case RessourceSystem.Action.Reduce:
+                    if (_current <= _score)
+                    {
+                        _animator.SetBool(IsSpend, false);
+                        return;
+                    }
+
+                    _animator.SetBool(IsSpend, true);
+                    _current -= _speed;
+                    if (_current < _score)
+                    {
+                        _current = _score;
+                    }
+                    break;
             }
 
-            _animator.SetBool(IsGain, true);
-            _current += _speed;
-            if (_current > _score)
-            {
-                _current = _score;
-            }
-
-           _textScore.text = _current.ToString();
+            _textScore.text = _current.ToString();
         }
+    
     };
 }

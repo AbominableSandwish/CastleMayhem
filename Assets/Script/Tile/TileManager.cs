@@ -10,7 +10,7 @@ public class TileManager : MonoBehaviour
     [SerializeField] Sprite[] sprites;
 
     // Start is called before the first frame update
-    void Start()
+    public void Show()
     {
         tilemap = GetComponent<Tilemap>();
             

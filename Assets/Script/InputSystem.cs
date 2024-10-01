@@ -19,7 +19,6 @@ public class InputSystem : MonoBehaviour
         if (Input.GetButton("Fire1"))
         {
             action = Action.Confim;
-            
         }
 
         if (Input.GetKey(KeyCode.Escape))

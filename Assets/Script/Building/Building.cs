@@ -1,32 +1,36 @@
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class Building
 {
+    public const int COSTMATERIAL1 = 0;
+    public const int COSTMATERIAL2 = 0;
+
     public enum Type
     {
-        factory,
-        miningCamp
-        
+        Factory = 0,
+        MiningCamp = 3
     }
-
-    Type type;
-    const int COSTMATERIAL1 = 0;
-    const int COSTMATERIAL2 = 0;
-    int level = 0;
-    public bool CanComplete = false;
+    public Type type;
     public string pathSprite;
     public int idSprite = -1;
 
-    public GameObject obj;
     public GameObject button;
+    private Vector2Int position;
 
-    public Building(Type type, GameObject obj, string path, int idSprite)
+
+    int level = 0;
+    public bool CanComplete = false;
+    public Vector2Int Position { get => position; set => position = value; }
+
+    public Building(Type type, Vector2Int position, string path, int idSprite)
     {
         this.type = type;
-        this.obj = obj;
         this.pathSprite = path;
         this.idSprite = idSprite;
+        this.position = position;
     }
 
     public virtual void Start()
@@ -38,17 +42,19 @@ public class Building
     {
     }
 
+  
     public virtual RessourceSystem.Package Complete()
     {
         return null;
     }
+
 }
 
 public class BuildingZone : Building
 {
     float timeToBuild;
 
-    public BuildingZone(Type type, GameObject zone, float timeToBuild) : base(type, zone, "", 0)
+    public BuildingZone(Type type, Vector2Int position, float timeToBuild) : base(type, position, "", 0)
     {
 
     }
@@ -71,8 +77,10 @@ public class BuildingZone : Building
 
 public class Factory : Building
 {
-    const int COSTMATERIAL1 = 100;
-    const int COSTMATERIAL2 = 0;
+    public const int COSTMATERIAL1 = 100;
+    public const int COSTMATERIAL2 = 0;
+    public const int XSize = 2, YSize = 2;
+
     float timeToBuild = 30.0f;
     RessourceSystem.Type typeRessource = RessourceSystem.Type.A;
 
@@ -83,7 +91,7 @@ public class Factory : Building
 
     int resource = 0;
 
-    public Factory(GameObject zone) : base(Type.factory, zone, "Sprites/BuildingSprite" , 0)
+    public Factory(Vector2Int position) : base(Type.Factory, position, "Sprites/BuildingSprite" , 0)
     {
 
     }
@@ -121,8 +129,9 @@ public class Factory : Building
 
 public class MiningCamp : Building
 {
-    const int COSTMATERIAL1 = 100;
-    const int COSTMATERIAL2 = 0;
+    public const int COSTMATERIAL1 = 500;
+    public const int COSTMATERIAL2 = 0;
+    public const int XSize = 2, YSize = 2;
     float timeToBuild = 30.0f;
     RessourceSystem.Type typeRessource = RessourceSystem.Type.B;
 
@@ -133,7 +142,7 @@ public class MiningCamp : Building
 
     int resource = 0;
 
-    public MiningCamp(GameObject zone) : base(Type.miningCamp, zone, "Sprites/BuildingSprite", 3)
+    public MiningCamp(Vector2Int position) : base(Type.MiningCamp, position, "Sprites/BuildingSprite", 3)
     {
 
     }

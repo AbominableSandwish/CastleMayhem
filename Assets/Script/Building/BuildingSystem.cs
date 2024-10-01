@@ -1,11 +1,8 @@
 using System.Collections.Generic;
 using System.Drawing;
-using System.Security.Cryptography;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.Tilemaps;
-using UnityEngine.U2D;
+using UnityEngine.UIElements;
 
 public class BuildingSystem : MonoBehaviour
 {
@@ -13,6 +10,9 @@ public class BuildingSystem : MonoBehaviour
     RessourceSystem _sourceSystem;
     Sprite[] sprites;
     [SerializeField] Tilemap tilemap;
+    MapManager mapManager;
+
+    Building newBuilding;
 
     const int height = 20;
     bool isPreview = false;
@@ -21,25 +21,21 @@ public class BuildingSystem : MonoBehaviour
 
     Vector3 offset = new Vector3(0, 1f);
 
+    public List<Building> Buildings { get => _buildings; set => _buildings = value; }
+
     // Start is called before the first frame update
     void Awake()
     {
         _sourceSystem = GetComponent<RessourceSystem>();
-
         _buildings = new List<Building>();
-
         sprites = Resources.LoadAll<Sprite>("Sprites/BuildingSprite");
         
     }
 
     private void Start()
     {
-        
-        foreach (Building building in _buildings)
-        {
-            SpriteRenderer renderer = building.obj.GetComponentInChildren<SpriteRenderer>();
-            renderer.sprite = sprites[building.idSprite];
-        }
+        this._buildings = new List<Building>();
+        mapManager = GetComponent<MapManager>();
     }
 
     // Update is called once per frame
@@ -56,21 +52,24 @@ public class BuildingSystem : MonoBehaviour
 
         if (isPreview)
         {
-            Refresh();
-            Vector2 mousePos = GameObject.Find("Cursor").GetComponent<CursorView>().GetPosition() * 2f;
-
-            Point pos = new Point();
-            pos.X = ((int)mousePos.x - 1) / 2 + ((int)mousePos.y - 1) * 1 + height / 2;
-            pos.Y = ((int)mousePos.y - 1) * 1 + ((int)mousePos.x - 1) / (-2) + height / 2;
-
-            if (pos.X >= 0 && pos.X < height - 1 && pos.Y >= 0 && pos.Y < height - 1)
+            if (!mapManager.isConfirm)
             {
-                Tile tile = new Tile();
-                tile.sprite = sprites[idSprite];
-                tilemap.SetTile(new Vector3Int(pos.X, pos.Y, 0), tile);
+                Refresh();
+                Vector2 mousePos = GameObject.Find("Cursor").GetComponent<CursorView>().GetPosition() * 2f;
+
+                Point pos = new Point();
+                pos.X = ((int)mousePos.x - 1) / 2 + ((int)mousePos.y - 1) * 1 + height / 2;
+                pos.Y = ((int)mousePos.y - 1) * 1 + ((int)mousePos.x - 1) / (-2) + height / 2;
+
+                if (pos.X >= 0 && pos.X < height - 1 && pos.Y >= 0 && pos.Y < height - 1)
+                {
+                    Tile tile = new Tile();
+                    tile.sprite = sprites[idSprite];
+                    tilemap.SetTile(new Vector3Int(pos.X, pos.Y, 0), tile);
+                }
+                //  preview.GetComponent<Tilemap>().SetTile() = new Vector3(pos.X, pos.Y);
+                lastpos = new Vector3Int(pos.X, pos.Y);
             }
-            //  preview.GetComponent<Tilemap>().SetTile() = new Vector3(pos.X, pos.Y);
-            lastpos = new Vector3Int(pos.X, pos.Y);
         }
     }
 
@@ -84,10 +83,7 @@ public class BuildingSystem : MonoBehaviour
     {
         foreach (Building building in _buildings)
         {
-            if(building.obj == obj)
-            {
-                _sourceSystem.AddRessource(building.Complete());
-            }
+            _sourceSystem.AddRessource(building.Complete());
         }
     }
 
@@ -96,10 +92,7 @@ public class BuildingSystem : MonoBehaviour
         bool canComplete = false;
         foreach (Building building in _buildings)
         {
-            if (building.obj == obj)
-            {
-                canComplete = building.CanComplete;
-            }
+            canComplete = building.CanComplete;
         }
         return canComplete;
     }
@@ -114,7 +107,52 @@ public class BuildingSystem : MonoBehaviour
 
     public void CancelPreview()
     {
-        isPreview = true;
+        isPreview = false;
+        Refresh();
         this.idSprite = -1;
+    }
+
+    public void ActionConfirmed(PanelChoice.Type action)
+    {
+       
+        switch (action)
+        {
+            case PanelChoice.Type.New:
+                NewBuilding();
+                CancelPreview();
+                break;
+        }
+        mapManager.CancelBuilding();
+    }
+
+    public void NewBuilding()
+    {
+        switch ((Building.Type)idSprite)
+        {
+            case Building.Type.Factory:
+                GameObject factory = new GameObject();
+                factory.name = "Factory_";
+                Tile tile = new Tile();
+                tile.sprite = sprites[idSprite];
+                GameObject.Find("Building").GetComponent<Tilemap>().SetTile(new Vector3Int(lastpos.x, lastpos.y, 0), tile);
+                this.newBuilding = new Factory(new Vector2Int(lastpos.x, lastpos.y));
+                this._buildings.Add(this.newBuilding);
+                _sourceSystem.ReduceRessource(new RessourceSystem.Package(RessourceSystem.Type.A, Factory.COSTMATERIAL1));
+                break;
+            case Building.Type.MiningCamp: break;
+        }
+    }
+
+    public void SetButton(UnityEngine.UI.Button button, Building building)
+    {
+        button.onClick.AddListener(delegate {this.Complete(building);});
+    }
+
+
+    public void Complete(Building building)
+    {
+        building.button.GetComponent<UnityEngine.UI.Button>().onClick.RemoveAllListeners();
+        _sourceSystem.AddRessource(building.Complete());
+        GetComponent<ViewSystem>().RemoveBtn(building);
     }
 }

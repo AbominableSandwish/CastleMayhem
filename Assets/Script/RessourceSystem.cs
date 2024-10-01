@@ -13,6 +13,12 @@ public class RessourceSystem : MonoBehaviour
     {
         A, B
     }
+    public enum Action
+    {
+        Add,
+        Reduce
+    }
+    public Action lastAction = Action.Add;
 
     public class Package
     {
@@ -43,5 +49,17 @@ public class RessourceSystem : MonoBehaviour
             case Type.A: RessourceA += packages.Value; break;
             case Type.B: RessourceB += packages.Value; break;
         }
+        lastAction = Action.Add;
     }
+
+    public void ReduceRessource(Package packages)
+    {
+        switch (packages.Type)
+        {
+            case Type.A: RessourceA -= packages.Value; break;
+            case Type.B: RessourceB -= packages.Value; break;
+        }
+        lastAction = Action.Reduce;
+    }
+
 }
