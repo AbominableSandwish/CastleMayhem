@@ -44,22 +44,28 @@ public class RessourceSystem : MonoBehaviour
 
     public void AddRessource(Package packages)
     {
-        switch (packages.Type)
+        if (packages != null)
         {
-            case Type.A: RessourceA += packages.Value; break;
-            case Type.B: RessourceB += packages.Value; break;
+            switch (packages.Type)
+            {
+                case Type.A: RessourceA += packages.Value; break;
+                case Type.B: RessourceB += packages.Value; break;
+            }
+            lastAction = Action.Add;
         }
-        lastAction = Action.Add;
     }
 
     public void ReduceRessource(Package packages)
     {
-        switch (packages.Type)
+        if (packages != null)
         {
-            case Type.A: RessourceA -= packages.Value; break;
-            case Type.B: RessourceB -= packages.Value; break;
+            switch (packages.Type)
+            {
+                case Type.A: RessourceA -= packages.Value; break;
+                case Type.B: RessourceB -= packages.Value; break;
+            }
+            lastAction = Action.Reduce;
         }
-        lastAction = Action.Reduce;
     }
 
 }

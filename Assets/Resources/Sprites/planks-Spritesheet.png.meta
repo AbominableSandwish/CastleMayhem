@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 54b74c7d5fa638d4eb540c4e84078522
+guid: bdcd07d3abc6c9348973083e3571bb80
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -34,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 175
+  spritePixelsToUnits: 1500
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -123,358 +123,316 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BuildingSprite_0
-      rect:
-        serializedVersion: 2
-        x: 30
-        y: 611
-        width: 359
-        height: 410
-      alignment: 9
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4a70f1b910cb80440925779acc3eab9e
-      internalID: 1554612481
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BuildingSprite_1
-      rect:
-        serializedVersion: 2
-        x: 557
-        y: 593
-        width: 322
-        height: 429
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 440da8e09b7654a4f8d1575bdc912fe8
-      internalID: 149061091
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BuildingSprite_2
-      rect:
-        serializedVersion: 2
-        x: 879
-        y: 606
-        width: 352
-        height: 418
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 04ae59e32df5b584eb6cb6d4f22ad3c9
-      internalID: 21377259
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BuildingSprite_3
-      rect:
-        serializedVersion: 2
-        x: 1396
-        y: 608
-        width: 333
-        height: 387
-      alignment: 9
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5082775470fcca54b849476a5b538093
-      internalID: 316390644
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BuildingSprite_4
-      rect:
-        serializedVersion: 2
-        x: 1788
-        y: 987
-        width: 4
-        height: 4
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d16ed6dd910757e40b17d63b718795bb
-      internalID: 1241130631
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BuildingSprite_5
-      rect:
-        serializedVersion: 2
-        x: 117
-        y: 0
-        width: 383
-        height: 296
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 743747588d85e3d4990439f00f88a840
-      internalID: -1702867946
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BuildingSprite_6
-      rect:
-        serializedVersion: 2
-        x: 283
-        y: 280
-        width: 320
-        height: 377
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a84ef32f5be768d4d99a4d3751afa8a9
-      internalID: -536135349
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BuildingSprite_7
-      rect:
-        serializedVersion: 2
-        x: 507
-        y: 28
-        width: 255
-        height: 298
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ecca577148669d74fa267b388d7b82d0
-      internalID: -1393198343
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BuildingSprite_8
-      rect:
-        serializedVersion: 2
-        x: 609
-        y: 283
-        width: 350
-        height: 362
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 7ecf887ba026573409f1eed4aced868a
-      internalID: 1154073539
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BuildingSprite_9
-      rect:
-        serializedVersion: 2
-        x: 772
-        y: 34
-        width: 265
-        height: 290
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ed45a1fd235f67d49bc30ac869508267
-      internalID: 1936830895
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BuildingSprite_10
-      rect:
-        serializedVersion: 2
-        x: 912
-        y: 282
-        width: 320
-        height: 369
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f03050c97bbed1447a0db3e3b94acc78
-      internalID: -961336836
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BuildingSprite_11
-      rect:
-        serializedVersion: 2
-        x: 1048
-        y: 1
-        width: 262
-        height: 349
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d87adb1f2fe163145bafacfcf91a6c04
-      internalID: -1024732099
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BuildingSprite_12
-      rect:
-        serializedVersion: 2
-        x: 1218
-        y: 279
-        width: 325
-        height: 327
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 490b53d086bd6aa429384df26784f5cb
-      internalID: -1984658720
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BuildingSprite_13
+      name: planks-Spritesheet_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 51
-        width: 5
-        height: 44
+        y: 1625
+        width: 478
+        height: 375
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bb0a7131b51df1646b3c39e764491881
-      internalID: 1329173308
+      spriteID: a8250956a0f7a2546a639822dfe39719
+      internalID: -1764570485
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BuildingSprite_14
+      name: planks-Spritesheet_2
+      rect:
+        serializedVersion: 2
+        x: 503
+        y: 1581
+        width: 478
+        height: 419
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 90e99b5e3416ad1419e31bd5b47ae6cf
+      internalID: 1832748584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: planks-Spritesheet_3
+      rect:
+        serializedVersion: 2
+        x: 2477
+        y: 728
+        width: 523
+        height: 1202
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 182645a27b98f6b46b52ee4c1e91c76f
+      internalID: -1047402475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: planks-Spritesheet_4
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 75
-        height: 63
+        y: 1068
+        width: 478
+        height: 433
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d9f4acffda7f95343a41046f7271cc92
-      internalID: 764574620
+      spriteID: 99e422356ecc88a4d8a17f71b2518d61
+      internalID: -1833113879
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BuildingSprite_15
+      name: planks-Spritesheet_5
       rect:
         serializedVersion: 2
-        x: 1318
-        y: 1
-        width: 273
-        height: 277
+        x: 1006
+        y: 1068
+        width: 478
+        height: 433
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8bf0817f3a7a39549b3f9aec49d948ce
-      internalID: 191404890
+      spriteID: e5250b76457e03348bbe938415d08918
+      internalID: 1537534971
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BuildingSprite_16
+      name: planks-Spritesheet_8
       rect:
         serializedVersion: 2
-        x: 1653
-        y: 0
-        width: 139
-        height: 82
+        x: 2008
+        y: 1079
+        width: 487
+        height: 422
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 15ef391812c79844f97e0a8486ef709f
-      internalID: -1968258017
+      spriteID: d79ac285eee69094190e0f8830250225
+      internalID: -582686447
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: planks-Spritesheet_9
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 625
+        width: 492
+        height: 336
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ab16a14c64299249a8839c3cb3d0cca
+      internalID: -1802399451
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: planks-Spritesheet_10
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 581
+        width: 500
+        height: 420
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fbf6e90cae950114086a15c8cab42ef7
+      internalID: 1782626413
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: planks-Spritesheet_11
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 67
+        width: 998
+        height: 434
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 933311c290ca1a344b638a789025fa18
+      internalID: 539450401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: planks-Spritesheet_12
+      rect:
+        serializedVersion: 2
+        x: 1000
+        y: 56
+        width: 1001
+        height: 441
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 810d0c72ccb08524787c80ef42bf59e0
+      internalID: 1441030179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: planks-Spritesheet_13
+      rect:
+        serializedVersion: 2
+        x: 1549
+        y: 491
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4417b65c106659a4395230c418d4cb3f
+      internalID: -1227676677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: planks-Spritesheet_15
+      rect:
+        serializedVersion: 2
+        x: 2008
+        y: 79
+        width: 487
+        height: 422
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 68389f1829a83e54e92a07385cccbe10
+      internalID: 1950263631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: planks-Spritesheet_16
+      rect:
+        serializedVersion: 2
+        x: 2477
+        y: 55
+        width: 523
+        height: 434
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f247e8ffa6dc5b546bd3313a59686cc3
+      internalID: -1819771662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: planks-Spritesheet_17
+      rect:
+        serializedVersion: 2
+        x: 1515
+        y: 1078
+        width: 487
+        height: 422
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1adff0473f5226e4b9445ca5c8a56cef
+      internalID: 864899765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: planks-Spritesheet_18
+      rect:
+        serializedVersion: 2
+        x: 503
+        y: 1065
+        width: 478
+        height: 433
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 744784f4ba1e28a479186bbe7261002b
+      internalID: 236821404
       vertices: []
       indices: 
       edges: []
@@ -482,7 +440,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 8fdcba3f18a6c02489b45eac06a08a9c
+    spriteID: dde82ac5ff250f746ba3d6c78158b9fb
     internalID: 0
     vertices: []
     indices: 
@@ -490,23 +448,25 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      BuildingSprite_0: 1554612481
-      BuildingSprite_1: 149061091
-      BuildingSprite_10: -961336836
-      BuildingSprite_11: -1024732099
-      BuildingSprite_12: -1984658720
-      BuildingSprite_13: 1329173308
-      BuildingSprite_14: 764574620
-      BuildingSprite_15: 191404890
-      BuildingSprite_16: -1968258017
-      BuildingSprite_2: 21377259
-      BuildingSprite_3: 316390644
-      BuildingSprite_4: 1241130631
-      BuildingSprite_5: -1702867946
-      BuildingSprite_6: -536135349
-      BuildingSprite_7: -1393198343
-      BuildingSprite_8: 1154073539
-      BuildingSprite_9: 1936830895
+      planks-Spritesheet_0: -1764570485
+      planks-Spritesheet_1: 1572428658
+      planks-Spritesheet_10: 1782626413
+      planks-Spritesheet_11: 539450401
+      planks-Spritesheet_12: 1441030179
+      planks-Spritesheet_13: -1227676677
+      planks-Spritesheet_14: 42277212
+      planks-Spritesheet_15: 1950263631
+      planks-Spritesheet_16: -1819771662
+      planks-Spritesheet_17: 864899765
+      planks-Spritesheet_18: 236821404
+      planks-Spritesheet_2: 1832748584
+      planks-Spritesheet_3: -1047402475
+      planks-Spritesheet_4: -1833113879
+      planks-Spritesheet_5: 1537534971
+      planks-Spritesheet_6: -1072036915
+      planks-Spritesheet_7: -1461711577
+      planks-Spritesheet_8: -582686447
+      planks-Spritesheet_9: -1802399451
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

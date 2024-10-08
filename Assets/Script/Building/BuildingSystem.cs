@@ -6,9 +6,11 @@ using UnityEngine.UIElements;
 
 public class BuildingSystem : MonoBehaviour
 {
-    private List<Building> _buildings;
+    [SerializeField] private List<Building> _buildings;
     RessourceSystem _sourceSystem;
     Sprite[] sprites;
+
+    [SerializeField] Sprite spriteConstruct;
     [SerializeField] Tilemap tilemap;
     MapManager mapManager;
 
@@ -28,17 +30,19 @@ public class BuildingSystem : MonoBehaviour
     {
         _sourceSystem = GetComponent<RessourceSystem>();
         _buildings = new List<Building>();
-        sprites = Resources.LoadAll<Sprite>("Sprites/BuildingSprite");
-        
+        sprites = Resources.LoadAll<Sprite>("Sprites/BuildingSprite");      
     }
 
     private void Start()
     {
-        this._buildings = new List<Building>();
+        if(GameObject.FindFirstObjectByType<GameManager>().IsLoaded() != true)
+            this._buildings = new List<Building>();
         mapManager = GetComponent<MapManager>();
     }
 
     // Update is called once per frame
+
+    Building buildInUpgrade;
     void Update()
     {
         float dt = Time.deltaTime;
@@ -47,7 +51,18 @@ public class BuildingSystem : MonoBehaviour
             foreach (Building building in _buildings)
             {
                 building.Update(dt);
+                if (building.CanUpgrade)
+                {
+                    buildInUpgrade = building;
+                }
             }
+        }
+
+        if(buildInUpgrade != null)
+        {
+            _buildings.Remove(buildInUpgrade);
+            Upgrade(buildInUpgrade);
+            buildInUpgrade = null;
         }
 
         if (isPreview)
@@ -64,7 +79,14 @@ public class BuildingSystem : MonoBehaviour
                 if (pos.X >= 0 && pos.X < height - 1 && pos.Y >= 0 && pos.Y < height - 1)
                 {
                     Tile tile = new Tile();
-                    tile.sprite = sprites[idSprite];
+                    if (idSprite != -1)
+                    {
+                        tile.sprite = sprites[idSprite];
+                    }
+                    else
+                    {
+                        tile.sprite = spriteConstruct;
+                    }
                     tilemap.SetTile(new Vector3Int(pos.X, pos.Y, 0), tile);
                 }
                 //  preview.GetComponent<Tilemap>().SetTile() = new Vector3(pos.X, pos.Y);
@@ -127,20 +149,60 @@ public class BuildingSystem : MonoBehaviour
 
     public void NewBuilding()
     {
+        GameObject building;
+        building = new GameObject();
+        Tile tile;
+        tile = new Tile();
+        tile.sprite = spriteConstruct;
         switch ((Building.Type)idSprite)
         {
-            case Building.Type.Factory:
-                GameObject factory = new GameObject();
-                factory.name = "Factory_";
-                Tile tile = new Tile();
-                tile.sprite = sprites[idSprite];
+            case Building.Type.Factory:              
+                building.name = "Factory_";       
                 GameObject.Find("Building").GetComponent<Tilemap>().SetTile(new Vector3Int(lastpos.x, lastpos.y, 0), tile);
-                this.newBuilding = new Factory(new Vector2Int(lastpos.x, lastpos.y));
+                this.newBuilding = new BuildingZone(new Vector2Int(lastpos.x, lastpos.y), Building.Type.Factory);
                 this._buildings.Add(this.newBuilding);
                 _sourceSystem.ReduceRessource(new RessourceSystem.Package(RessourceSystem.Type.A, Factory.COSTMATERIAL1));
                 break;
-            case Building.Type.MiningCamp: break;
+            case Building.Type.MiningCamp:
+                building.name = "MiningCamp_";
+                GameObject.Find("Building").GetComponent<Tilemap>().SetTile(new Vector3Int(lastpos.x, lastpos.y, 0), tile);
+                this.newBuilding = new BuildingZone(new Vector2Int(lastpos.x, lastpos.y), Building.Type.MiningCamp);
+                this._buildings.Add(this.newBuilding);
+                _sourceSystem.ReduceRessource(new RessourceSystem.Package(RessourceSystem.Type.A, MiningCamp.COSTMATERIAL1));
+                break;
         }
+
+        string json = ExportData();
+        StreamManager.WriteToFile("build.data", json);
+    }
+
+    public void Upgrade(Building building)
+    {
+        Building.Type next = ((BuildingZone)building).NextType;
+        GameObject obj;
+        obj = new GameObject();
+        Tile tile;
+        tile = new Tile();
+        tile.sprite = sprites[(int)next];
+        Building buildingUpgrade;
+        switch (next)
+        {
+            case Building.Type.Factory:
+                obj.name = "Factory_";
+                GameObject.Find("Building").GetComponent<Tilemap>().SetTile(new Vector3Int(lastpos.x, lastpos.y, 0), tile);
+                buildingUpgrade = new Factory(new Vector2Int(lastpos.x, lastpos.y), building.level++);
+                this._buildings.Add(buildingUpgrade);
+                break;
+            case Building.Type.MiningCamp:
+                obj.name = "MiningCamp_";
+                GameObject.Find("Building").GetComponent<Tilemap>().SetTile(new Vector3Int(lastpos.x, lastpos.y, 0), tile);
+                buildingUpgrade = new MiningCamp(new Vector2Int(lastpos.x, lastpos.y), building.level++);
+                this._buildings.Add(buildingUpgrade);
+                break;
+        }
+
+        string json = ExportData();
+        StreamManager.WriteToFile("build.data", json);
     }
 
     public void SetButton(UnityEngine.UI.Button button, Building building)
@@ -154,5 +216,58 @@ public class BuildingSystem : MonoBehaviour
         building.button.GetComponent<UnityEngine.UI.Button>().onClick.RemoveAllListeners();
         _sourceSystem.AddRessource(building.Complete());
         GetComponent<ViewSystem>().RemoveBtn(building);
+    }
+
+    public string ExportData()
+    {
+        string buildingsToJson = "";
+        foreach (Building building in _buildings)
+        {
+            buildingsToJson += JsonUtility.ToJson(building) + "\n";
+        }
+        Debug.Log(buildingsToJson);
+        return buildingsToJson;
+    }
+
+    public List<Building> Import(string json)
+    {
+        List<Building> buildings = new List<Building>();
+        string row = "";
+        foreach (char c in json)
+        {
+            if (c != '\n')
+            {
+                row += c;
+            }
+            else
+            {
+                if (row == "")
+                    break;
+                Building building = JsonUtility.FromJson<Building>(row);
+                Tile tile = new Tile();
+                tile.sprite = sprites[building.idSprite];
+                GameObject.Find("Building").GetComponent<Tilemap>().SetTile(new Vector3Int(building.Position.x, building.Position.y, 0), tile);
+
+                switch (building.type)
+                {
+                    case Building.Type.Factory:
+                        buildings.Add(JsonUtility.FromJson<Factory>(row));
+                        break;
+                    case Building.Type.MiningCamp:
+                        buildings.Add(JsonUtility.FromJson<MiningCamp>(row));
+                        break;
+                }
+
+                row = "";
+            }
+        }
+        return buildings;
+    }
+
+    public void Load()
+    {
+        string json = StreamManager.readTextFile("build.data");
+        this._buildings = new List<Building>();
+        _buildings = Import(json);
     }
 }

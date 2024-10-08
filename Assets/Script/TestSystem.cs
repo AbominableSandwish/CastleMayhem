@@ -51,6 +51,11 @@ public class ViewSystem : MonoBehaviour
                         {
                             btn.GetComponent<Image>().sprite = sprites[1];
                         }
+                        if (building.type == Building.Type.InContruct)
+                        {
+                            btn.GetComponent<Image>().sprite = sprites[2];
+                        }
+
                         btn.enabled = true;
                         btn.image.enabled = true;
                         building.button = btn.gameObject;
@@ -58,8 +63,6 @@ public class ViewSystem : MonoBehaviour
 
                         Vector2Int posCell = building.Position;
                         Point pos = new Point();
-                        //pos.X = (int)Mathf.Sqrt((2 * posCell.x + 2 * posCell.y) * (posCell.x + 3 * posCell.y));
-                        //pos.Y = (int)Mathf.Sqrt((posCell.x - posCell.y) * (3 * posCell.x - posCell.y));
 
                         pos.X = 2 * posCell.x + posCell.y * 2;
                         pos.Y = posCell.x - posCell.y;
@@ -81,5 +84,4 @@ public class ViewSystem : MonoBehaviour
         building.button = null;
         freeButtons.Enqueue(btn);
     }
-
 }

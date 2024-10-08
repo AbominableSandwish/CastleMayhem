@@ -9,7 +9,16 @@ public class GameManager : MonoBehaviour
         NewParty,
         LoadPary
     }
-    [SerializeField] Action action;
+
+    [SerializeField] private Action action;
+
+    public bool IsLoaded()
+    {
+        bool isLoader = false;
+        if(action == Action.LoadPary)
+            isLoader = true;
+        return isLoader;
+    }
     private void Start()
     {
         switch (action)
@@ -19,10 +28,13 @@ public class GameManager : MonoBehaviour
                 break; 
             case Action.LoadPary:
                 GetComponent<MapManager>().Load();
+                GetComponent<BuildingSystem>().Load();
                 break;
         }
 
         UnityEngine.Cursor.visible = false;
         UnityEngine.Cursor.lockState = CursorLockMode.Confined;
     }
+
+
 }

@@ -1,8 +1,5 @@
 using UnityEngine;
 
-
-
-
 public class BuildingUI : MonoBehaviour
 {
     [SerializeField] GameObject panel;
