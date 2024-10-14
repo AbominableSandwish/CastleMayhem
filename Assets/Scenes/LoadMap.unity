@@ -4867,6 +4867,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa5fcbfa71cbb4a44b89bf06fcbd76cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _buildings: []
+  particle: {fileID: 2604429481679581396, guid: 2fc98191fce48bb4a8599607bbfaf28d, type: 3}
+  spriteConstruct: {fileID: -1833113879, guid: bdcd07d3abc6c9348973083e3571bb80, type: 3}
   tilemap: {fileID: 1163701492}
 --- !u!4 &346601685
 Transform:
@@ -4958,6 +4961,7 @@ MonoBehaviour:
   sprites:
   - {fileID: 21300000, guid: a5d6467f533594a4bac7d93fb22d1dc8, type: 3}
   - {fileID: 21300000, guid: 0aa13b519c7a3b94fa3219f0e896a665, type: 3}
+  - {fileID: 21300000, guid: 0665a1de6de700446afcedab86b39f75, type: 3}
 --- !u!1 &366331014
 GameObject:
   m_ObjectHideFlags: 0
@@ -14317,7 +14321,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 100
+  m_SortingOrder: 1000
   m_TargetDisplay: 0
 --- !u!224 &1363408799
 RectTransform:

@@ -19,6 +19,7 @@ public class Building
 
     public GameObject button;
     public Vector2Int position;
+    public GameObject Object;
 
     public bool CanUpgrade = false;
     public int level = 0;
@@ -59,8 +60,10 @@ public class Building
 [Serializable]
 public class BuildingZone : Building
 {
-    float timeToBuild;
+    public float TimeToBuild;
+    float timer = 0.0f;
     public Type NextType;
+    public Vector2Int size;
 
     public BuildingZone(Vector2Int position, Type NextType, int Level = 0) : base(Type.InContruct, position, "", 0)
     {
@@ -70,14 +73,17 @@ public class BuildingZone : Building
         {
             case Type.Factory:
                 timeToBuild = Factory.timeToBuild;
+                size = Factory.size;
                 break;
 
             case Type.MiningCamp:
                 timeToBuild = MiningCamp.timeToBuild;
+                size = MiningCamp.size;
                 break;
         }
 
-        this.timeToBuild = timeToBuild;
+        this.TimeToBuild = timeToBuild;
+        this.NextType = NextType;
     }
 
     public override void Start()
@@ -87,10 +93,13 @@ public class BuildingZone : Building
 
     public override void Update(float deltaTime)
     {
-        timeToBuild -= deltaTime;
-        if(timeToBuild <= 0.0f)
+        if (!CanComplete)
         {
-            CanComplete = true;
+            timer += deltaTime;
+            if (timer >= TimeToBuild)
+            {
+                CanComplete = true;
+            }
         }
     }
 
@@ -116,6 +125,7 @@ public class Factory : Building
     static int maximumStorageQuantity = 250;
     static int minimumToCollect = 25;
     float timeToProduct;
+    static public Vector2Int size = new Vector2Int(2, 2);
 
     int resource = 0;
 
@@ -163,8 +173,8 @@ public class MiningCamp : Building
     public const int COSTMATERIAL2 = 0;
 
     public const int XSize = 2, YSize = 2;
-
-    static public int timeToBuild = 60;
+    static public Vector2Int size = new Vector2Int(2, 2);
+    static public int timeToBuild = 15;
     RessourceSystem.Type typeRessource = RessourceSystem.Type.B;
 
     int productionQuantityPerMinute = 30;

@@ -10,6 +10,8 @@ public class BuildingSystem : MonoBehaviour
     RessourceSystem _sourceSystem;
     Sprite[] sprites;
 
+    [SerializeField] GameObject particle;
+
     [SerializeField] Sprite spriteConstruct;
     [SerializeField] Tilemap tilemap;
     MapManager mapManager;
@@ -154,20 +156,27 @@ public class BuildingSystem : MonoBehaviour
         Tile tile;
         tile = new Tile();
         tile.sprite = spriteConstruct;
+        ConstructionView view;
         switch ((Building.Type)idSprite)
         {
             case Building.Type.Factory:              
                 building.name = "Factory_";       
                 GameObject.Find("Building").GetComponent<Tilemap>().SetTile(new Vector3Int(lastpos.x, lastpos.y, 0), tile);
                 this.newBuilding = new BuildingZone(new Vector2Int(lastpos.x, lastpos.y), Building.Type.Factory);
+                this.newBuilding.Object = building;
                 this._buildings.Add(this.newBuilding);
+                view = building.AddComponent<ConstructionView>();
+                view.SetConstructionView(spriteConstruct, (BuildingZone)this.newBuilding);
                 _sourceSystem.ReduceRessource(new RessourceSystem.Package(RessourceSystem.Type.A, Factory.COSTMATERIAL1));
                 break;
             case Building.Type.MiningCamp:
                 building.name = "MiningCamp_";
                 GameObject.Find("Building").GetComponent<Tilemap>().SetTile(new Vector3Int(lastpos.x, lastpos.y, 0), tile);
                 this.newBuilding = new BuildingZone(new Vector2Int(lastpos.x, lastpos.y), Building.Type.MiningCamp);
+                this.newBuilding.Object = building;
                 this._buildings.Add(this.newBuilding);
+                view = building.AddComponent<ConstructionView>();
+                view.SetConstructionView(spriteConstruct, (BuildingZone)this.newBuilding);
                 _sourceSystem.ReduceRessource(new RessourceSystem.Package(RessourceSystem.Type.A, MiningCamp.COSTMATERIAL1));
                 break;
         }
@@ -184,19 +193,21 @@ public class BuildingSystem : MonoBehaviour
         Tile tile;
         tile = new Tile();
         tile.sprite = sprites[(int)next];
-        Building buildingUpgrade;
+        Building buildingUpgrade = null;
         switch (next)
         {
             case Building.Type.Factory:
                 obj.name = "Factory_";
-                GameObject.Find("Building").GetComponent<Tilemap>().SetTile(new Vector3Int(lastpos.x, lastpos.y, 0), tile);
-                buildingUpgrade = new Factory(new Vector2Int(lastpos.x, lastpos.y), building.level++);
+                GameObject.Find("Building").GetComponent<Tilemap>().SetTile(new Vector3Int(building.position.x, building.position.y, 0), tile);
+                buildingUpgrade = new Factory(new Vector2Int(building.position.x, building.position.y), building.level++);
+                buildingUpgrade.Object = obj;
                 this._buildings.Add(buildingUpgrade);
                 break;
             case Building.Type.MiningCamp:
                 obj.name = "MiningCamp_";
-                GameObject.Find("Building").GetComponent<Tilemap>().SetTile(new Vector3Int(lastpos.x, lastpos.y, 0), tile);
-                buildingUpgrade = new MiningCamp(new Vector2Int(lastpos.x, lastpos.y), building.level++);
+                GameObject.Find("Building").GetComponent<Tilemap>().SetTile(new Vector3Int(building.position.x, building.position.y, 0), tile);
+                buildingUpgrade = new MiningCamp(new Vector2Int(building.position.x, building.position.y), building.level++);
+                buildingUpgrade.Object = obj;
                 this._buildings.Add(buildingUpgrade);
                 break;
         }
@@ -214,8 +225,32 @@ public class BuildingSystem : MonoBehaviour
     public void Complete(Building building)
     {
         building.button.GetComponent<UnityEngine.UI.Button>().onClick.RemoveAllListeners();
-        _sourceSystem.AddRessource(building.Complete());
+        RessourceSystem.Package pack = building.Complete();
+        if (pack != null)
+        {
+            Point worldPos = new Point();
+
+            worldPos.X = 2 * building.position.x + building.position.y * 2;
+            worldPos.Y = building.position.x - building.position.y;
+            switch (pack.Type)
+            {
+                case RessourceSystem.Type.A:
+                    Instantiate(particle, new Vector3(worldPos.Y / 2.0f, worldPos.X / 8.0f - 4, -0.25f), Quaternion.identity);
+                    break;
+                case RessourceSystem.Type.B:
+                    Instantiate(particle, new Vector3(worldPos.Y / 2.0f, worldPos.X / 8.0f - 4, -0.25f), Quaternion.identity);
+                    break;
+            }
+            _sourceSystem.AddRessource(pack);
+        }
+        
         GetComponent<ViewSystem>().RemoveBtn(building);
+        if (building.Object != null)
+        {
+          
+            Destroy(building.Object);
+        }
+
     }
 
     public string ExportData()
@@ -225,7 +260,6 @@ public class BuildingSystem : MonoBehaviour
         {
             buildingsToJson += JsonUtility.ToJson(building) + "\n";
         }
-        Debug.Log(buildingsToJson);
         return buildingsToJson;
     }
 

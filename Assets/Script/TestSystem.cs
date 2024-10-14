@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
@@ -26,6 +25,7 @@ public class ViewSystem : MonoBehaviour
             GameObject gameObject = GameObject.Instantiate(prefab, CanvasRect);
             gameObject.transform.position = new Vector3(0, -100, 0);
             freeButtons.Enqueue(gameObject.GetComponent<Button>());
+
         }
 
         buildingSystem = GetComponent<BuildingSystem>();
