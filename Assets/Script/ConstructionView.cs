@@ -23,9 +23,9 @@ public class ConstructionView : MonoBehaviour
         this.ConstructSprite = sprite;
         this.building = building;
 
-        size = building.size;
+        size = building.GetSize();
 
-        timeToConstruct = this.building.TimeToBuild / (float)(nbrConstruct * size.x * size.y);
+        timeToConstruct = (this.building.TimeToBuild - 5) / (float)(nbrConstruct * size.x * size.y);
 
         Point worldPos = new Point();
 

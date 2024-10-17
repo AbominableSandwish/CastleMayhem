@@ -202,7 +202,7 @@ public class MapManager : MonoBehaviour
             }
         }
 
-        GameObject.Find("PanelBuilding").GetComponent<MenuBuilding>().CloseMenu();
+        GameObject.Find("PanelPurchase").GetComponent<MenuBuilding>().CloseMenu();
         input.ActionFree(InputSystem.Action.Confim);
         int id = -1;
         switch ((Building.Type)type)
@@ -245,7 +245,7 @@ public class MapManager : MonoBehaviour
         SetY(0);
 
 
-        GameObject.Find("PanelBuilding").GetComponent<MenuBuilding>().OpenMenu();
+        GameObject.Find("PanelPurchase").GetComponent<MenuBuilding>().OpenMenu();
         GetComponent<BuildingSystem>().CancelPreview();
     }
 

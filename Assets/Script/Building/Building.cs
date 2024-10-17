@@ -1,4 +1,6 @@
 using System;
+using System.Drawing;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [Serializable]
@@ -7,6 +9,7 @@ public class Building
     public const int COSTMATERIAL1 = 0;
     public const int COSTMATERIAL2 = 0;
 
+    private int health = 100;
     public enum Type
     {
         InContruct = -1,
@@ -16,15 +19,18 @@ public class Building
     public Type type;
     public string pathSprite;
     public int idSprite = -1;
-
+  
     public GameObject button;
     public Vector2Int position;
     public GameObject Object;
 
+    public bool IsUpgrading = false;
     public bool CanUpgrade = false;
+
     public int level = 0;
     public bool CanComplete = false;
     public Vector2Int Position { get => position; set => position = value; }
+    public int Health { get => health; set => health = value; }
 
     public Building(Type type, Vector2Int position, string path, int idSprite)
     {
@@ -39,6 +45,11 @@ public class Building
         level++;
     }
 
+    public virtual bool AABB(Point point)
+    {
+        return false;
+    }
+
     public virtual void Start()
     {
 
@@ -48,14 +59,26 @@ public class Building
     {
     }
 
-  
+    public virtual int GetTimeToConstruct() {  return 0; }
+    public virtual int GetCapacity() { return 0; }
+    public virtual int GetproductionQuantityPerHour()
+    {
+        return 0;
+    }
+
+    public virtual int GetMaximumStorageQuantity()
+    {
+        return 0;
+    }
+
     public virtual RessourceSystem.Package Complete()
     {
         return null;
     }
 
+    //Bad
+    public Sprite sprite;
 }
-
 
 [Serializable]
 public class BuildingZone : Building
@@ -63,27 +86,42 @@ public class BuildingZone : Building
     public float TimeToBuild;
     float timer = 0.0f;
     public Type NextType;
-    public Vector2Int size;
+    Vector2Int size;
+    
 
-    public BuildingZone(Vector2Int position, Type NextType, int Level = 0) : base(Type.InContruct, position, "", 0)
+    public BuildingZone(Vector2Int position, Type NextType, float timeToBuild, int Level = 0) : base(Type.InContruct, position, "", 0)
     {
         this.level = Level;
-        int timeToBuild = 0;
         switch (NextType)
         {
             case Type.Factory:
-                timeToBuild = Factory.timeToBuild;
-                size = Factory.size;
+                size = Factory.Size;
                 break;
 
             case Type.MiningCamp:
-                timeToBuild = MiningCamp.timeToBuild;
-                size = MiningCamp.size;
+                size = MiningCamp.Size;
                 break;
         }
 
         this.TimeToBuild = timeToBuild;
         this.NextType = NextType;
+    }
+
+    public Vector2Int GetSize()
+    {
+        return size;
+    }
+
+    public override bool AABB(Point point)
+    {
+        bool isEnter = false;
+        if ((point.X >= position.x && point.X <= position.x + size.x)
+            && (point.Y >= position.y && point.Y <= position.y + size.y))
+        {
+            isEnter = true;
+        }
+
+        return isEnter;
     }
 
     public override void Start()
@@ -105,7 +143,7 @@ public class BuildingZone : Building
 
     public override RessourceSystem.Package Complete()
     {
-        CanUpgrade = true;
+        IsUpgrading = true;
         return null;
     }
 }
@@ -114,28 +152,47 @@ public class BuildingZone : Building
 [Serializable]
 public class Factory : Building
 {
-    public const int COSTMATERIAL1 = 100;
-    public const int COSTMATERIAL2 = 0;
-    public const int XSize = 2, YSize = 2;
+    public new const int COSTMATERIAL1 = 100;
+    public new const int COSTMATERIAL2 = 0;
+    static public int timeToBuild = 30;
 
-    static public int timeToBuild = 10;
+    static public  Vector2Int Size = new Vector2Int(2,2);
     RessourceSystem.Type typeRessource = RessourceSystem.Type.A;
-
-    static int productionQuantityPerMinute = 30;
-    static int maximumStorageQuantity = 250;
+    public static int productionQuantityPerHour = 300;
+    public static int maximumStorageQuantity = 250;
     static int minimumToCollect = 25;
     float timeToProduct;
-    static public Vector2Int size = new Vector2Int(2, 2);
+
 
     int resource = 0;
 
+
+    public override int GetCapacity()
+    {
+        return resource;
+    }
+
+    public override int GetTimeToConstruct()
+    {
+        return timeToBuild * (level + 1);
+    }
+    public override int GetproductionQuantityPerHour() 
+    {
+        return productionQuantityPerHour * level;
+    }
+
+    public override int GetMaximumStorageQuantity()
+    {
+        return maximumStorageQuantity * level;
+    }
     public Factory(Vector2Int position, int level = 1) : base(Type.Factory, position, "Sprites/BuildingSprite" , 0)
     {
+        CanUpgrade = true;
         this.level = level;
     }
     public override void Start()
     {
-        timeToProduct = productionQuantityPerMinute / 60.0f;
+        timeToProduct = 3600.0f / productionQuantityPerHour;
 
 
         Vector3 p = Camera.main.ScreenToWorldPoint(new Vector3(0, Screen.height, 10));
@@ -150,7 +207,7 @@ public class Factory : Building
                 resource++;
                 if (resource >= minimumToCollect)
                     CanComplete = true;
-                timeToProduct = productionQuantityPerMinute / 60.0f;
+                timeToProduct = 3600.0f / GetproductionQuantityPerHour();
             }
         }
     }
@@ -163,6 +220,18 @@ public class Factory : Building
         CanComplete = false;
         return new RessourceSystem.Package(RessourceSystem.Type.A, value - remain);
     }
+
+    public override bool AABB(Point point)
+    {
+        bool isEnter = false;
+        if ((point.X >= position.x && point.X <= position.x + Size.x)
+            && (point.Y >= position.y && point.Y <= position.y + Size.y))
+        {
+            isEnter = true;
+        }
+
+        return isEnter;
+    }
 }
 
 
@@ -172,26 +241,45 @@ public class MiningCamp : Building
     public const int COSTMATERIAL1 = 500;
     public const int COSTMATERIAL2 = 0;
 
-    public const int XSize = 2, YSize = 2;
-    static public Vector2Int size = new Vector2Int(2, 2);
-    static public int timeToBuild = 15;
+    static public Vector2Int Size = new Vector2Int(2, 2);
+    static public int timeToBuild = 60;
     RessourceSystem.Type typeRessource = RessourceSystem.Type.B;
 
-    int productionQuantityPerMinute = 30;
+    int productionQuantityPerHour = 5;
     int maximumStorageQuantity = 250;
     int minimumToCollect = 25;
     float timeToProduct;
 
     int resource = 0;
 
+    public override int GetCapacity()
+    {
+        return resource;
+    }
+
+    public override int GetTimeToConstruct()
+    {
+        return timeToBuild * (level + 1);
+    }
+    public override int GetproductionQuantityPerHour()
+    {
+        return productionQuantityPerHour * level;
+    }
+
+    public override int GetMaximumStorageQuantity()
+    {
+        return maximumStorageQuantity * level;
+    }
+
     public MiningCamp(Vector2Int position, int level) : base(Type.MiningCamp, position, "Sprites/BuildingSprite", 3)
     {
+        CanUpgrade = true;
         this.level = level;
     }
 
-    public override void Start()
+    public  override void Start()
     {
-        timeToProduct = productionQuantityPerMinute / 60.0f;
+        timeToProduct = productionQuantityPerHour / 60.0f;
 
 
         Vector3 p = Camera.main.ScreenToWorldPoint(new Vector3(0, Screen.height, 10));
@@ -207,7 +295,7 @@ public class MiningCamp : Building
                 resource++;
                 if (resource >= minimumToCollect)
                     CanComplete = true;
-                timeToProduct = productionQuantityPerMinute / 60.0f;
+                timeToProduct = 3600.0f / GetproductionQuantityPerHour();
             }
         }
     }
@@ -220,5 +308,16 @@ public class MiningCamp : Building
         CanComplete = false;
         return new RessourceSystem.Package(RessourceSystem.Type.B, value - remain);
     }
-}
 
+    public override bool AABB(Point point)
+    {
+        bool isEnter = false;
+        if ((point.X >= position.x && point.X <= position.x + Size.x)
+            && (point.Y >= position.y && point.Y <= position.y + Size.y))
+        {
+            isEnter = true;
+        }
+
+        return isEnter;
+    }
+}

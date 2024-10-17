@@ -5,6 +5,10 @@ using UnityEngine;
 public class InputSystem : MonoBehaviour
 {
     bool ActionUsed = false;
+    public bool isClicked = false;
+    bool TickSecurity = false;
+    const int nbrTick = 48;
+    int counter = 0;
     public enum Action
     {
         None,
@@ -14,8 +18,9 @@ public class InputSystem : MonoBehaviour
 
     Action action = Action.None;
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
+        isClicked = false;
         if (Input.GetButton("Fire1"))
         {
             action = Action.Confim;
@@ -26,8 +31,31 @@ public class InputSystem : MonoBehaviour
             action = Action.Cancel;
         }
 
-        if(action != Action.None)
+        if (Input.GetMouseButtonDown(0))
+        {
+            TickSecurity = true;
+        }
+
+        if (TickSecurity)
+        {
+            if (counter >= nbrTick)
+            {
+                ResetClick();
+            }
+            counter++;
+        }
+
+        if (action != Action.None)
             ActionUsed = true;
+
+     
+    }
+
+    public void ResetClick()
+    {
+        TickSecurity = false;
+        isClicked = true;
+        counter = 0;
     }
 
     public bool ActionFree(Action action)
